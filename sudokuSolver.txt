@@ -1,0 +1,112 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+void display(vector<vector<int>> &grid)
+{
+
+  for (int i = 0; i < 9; i++)
+  {
+    for (int j = 0; j < 9; j++)
+    {
+      cout << grid[i][j] << " ";
+    }
+    cout << endl;
+  }
+}
+bool canPlace(int row, int col, vector<vector<int>> &grid, int ans)
+{
+
+  for (int i = 0; i < 3; i++)
+  {
+    for (int j = 0; j < 3; j++)
+    {
+      int x = (row / 3) * 3 + i;
+      int y = (col / 3) * 3 + j;
+      if (grid[x][y] == ans)
+        return false;
+    }
+  }
+
+  for (int i = 0; i < 9; i++)
+  {
+
+    if (grid[i][col] == ans and i != row)
+      return false;
+  }
+  for (int i = 0; i < 9; i++)
+  {
+
+    if (grid[row][i] == ans and i != col)
+      return false;
+  }
+
+  return true;
+}
+int countans = 0;
+void ans(int row, int col, vector<vector<int>> &grid)
+{
+
+  if (col == 9)
+  {
+    ans(row + 1, 0, grid);
+    return;
+  }
+  if (row == 9)
+  {
+    countans++;
+    display(grid);
+    cout << endl;
+    return;
+  }
+  //cout<<row<<" "<<col<<endl;
+  if (grid[row][col] == 0)
+    for (int i = 1; i <= 9; i++)
+    {
+      if (canPlace(row, col, grid, i))
+      {
+        grid[row][col] = i;
+        ans(row, col + 1, grid);
+        grid[row][col] = 0;
+      }
+    }
+
+  else
+    ans(row, col + 1, grid);
+}
+int main()
+{
+  freopen("input.txt", "r", stdin);
+  freopen("output.txt", "w", stdout);
+  clock_t start, end;
+
+  start = clock();
+  //
+
+  vector<vector<int>> grid(9, vector<int>(9, 0));
+
+  for (int i = 0; i < 9; i++)
+  {
+    for (int j = 0; j < 9; j++)
+    {
+      cin >> grid[i][j];
+    }
+  }
+  for (int i = 0; i < 9; i++)
+  {
+    for (int j = 0; j < 9; j++)
+    {
+      cout << grid[i][j] << " ";
+    }
+    cout << "\n";
+  }
+  ans(0, 0, grid);
+  cout << "\n";
+  cout << countans;
+
+  end = clock();
+
+  double time = double(end - start) / double(CLOCKS_PER_SEC);
+
+  cout << endl
+       << "Execution Time  :  " << fixed << time << setprecision(10);
+}
